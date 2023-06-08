@@ -33,7 +33,7 @@
             _SnowDirection.w = 0;//确保方向向量的w分量是0(否则效果会出现严重错误)
             //我们约定_SnowDirection是雪在世界空间中的方向,而物体的三角形的法线在其自身的对象空间
             //两者不在同一个坐标系,就无法进行雪和三角形法线的夹角计算,需要进行坐标系转换
-            //unity_WorldToObject是unity预定义的,并且传递到shader中的
+            //unity_WorldToObject是unity预定义的从世界空间转换到对象空间,并且传递到shader中的
             //可以想象,从对象空间转换到世界空间的矩阵,Unity也预定义了,叫做unity_ObjectToWorld
             float4 sn = mul(unity_WorldToObject, _SnowDirection); //雪方向向量变化到对象空间
             sn = normalize(sn);//由于士兵模型带缩放,所以sn要单位化
