@@ -270,7 +270,7 @@ PrefabInstance:
     - target: {fileID: 6822782514704140635, guid: 64db40aab1184014abeeb85a3403a415,
         type: 3}
       propertyPath: m_Name
-      value: Soldier
+      value: SoldierLambert
       objectReference: {fileID: 0}
     - target: {fileID: 6822782514703652025, guid: 64db40aab1184014abeeb85a3403a415,
         type: 3}
