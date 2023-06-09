@@ -62,14 +62,20 @@
     <None Include="Assets\Part2\SurfDiffuse.shader" />
     <None Include="Assets\readme.txt" />
     <None Include="Assets\Materials\NewShader\NewShader.shader" />
+    <None Include="Assets\Materials\GrabShader.shader" />
     <None Include="Assets\Materials\Lambert\SimpleLambertX2.shader" />
     <None Include="Assets\Part1\MyVFShader.shader" />
+    <None Include="Assets\Materials\GlassShader.shader" />
     <None Include="Assets\Materials\Lambert\SimpleLambert.shader" />
     <None Include="Assets\Materials\Toon\Toon.shader" />
     <None Include="Assets\Part2\SurfSnow.shader" />
+    <None Include="Assets\Part3\ToonShading.shader" />
     <None Include="Assets\Part2\SurfExtursion.shader" />
+    <None Include="Assets\Part4\GrabShader.shader" />
     <None Include="Assets\Part1\MySurfShader.shader" />
     <None Include="Assets\Part2\SurfTextured.shader" />
+    <None Include="Assets\Part3\SimpleLambert.shader" />
+    <None Include="Assets\Materials\WaterShader.shader" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>F:/TADemo/TA/ShaderProject/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -640,6 +646,12 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>F:/Unity2018.4.2f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{94910C0E-065F-CD31-4953-7402D81417E9}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
