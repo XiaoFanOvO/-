@@ -1,11 +1,12 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Unlit/GrabShader"
+Shader "Unlit/GlassShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _MainTex ("Glass Base Texture", 2D) = "white" {}
         _BumpMap ("Noise text", 2D) = "bump" {}
+        _Magnitude("Magnitude", Range(0,1)) = 0.5 //扰动值
     }
     SubShader
     {
@@ -35,16 +36,23 @@ Shader "Unlit/GrabShader"
             #include "UnityCG.cginc"
 
             sampler2D _GrabTexture; //表示在GrabPass中抓取纹理
+            sampler2D _MainTex;
+            sampler2D _BumpMap;
+            float _Magnitude;
 
             struct VertInput
             {
                 float4 vertex : POSITION;
+                float4 color : COLOR;
+                float2 texcoord : TEXCOORD0; //纹理坐标 在玻璃中，每个玻璃的顶点有两个坐标，一个是自身的纹理坐标，一个是贴图坐标
             };
 
             struct VertOutput
             {
                 float4 vertex : POSITION;
-                float4 uvgrab : TEXCOORD1;
+                fixed4 color : COLOR;
+                float2 texcoord : TEXCOORD0; //_MainTex的纹理坐标
+                float4 uvgrab : TEXCOORD1; // _BumpMap的纹理坐标
             };
 
             //计算每个顶点相关的属性(位置,纹理坐标等)
@@ -55,6 +63,10 @@ Shader "Unlit/GrabShader"
                 //ComputeGrabScreenPos 传入一个投影空间中的顶点坐标,此方法会以摄像机可视范围的左下角为纹理坐标[0,0]点,右上角为[1,1]点
                 //计算出当前顶点位置对应的纹理坐标
                 o.uvgrab = ComputeGrabScreenPos(o.vertex);
+
+                o.color = v.color;
+                o.texcoord = v.texcoord;
+
                 return o;
                 //顶点坐标是-1到1，纹理坐标是0到1
                 //在ComputeGrabScreenPos方法中先将顶点坐标全部除以0.5, 再全部加0.5，就转化为了纹理坐标
@@ -65,27 +77,13 @@ Shader "Unlit/GrabShader"
             {
                 //tex2Dproj和tex2D的唯一区别是，在对纹理进行采样之前，tex2Dproj将输入的UV xy坐标除以其w坐标。这是将坐标从正交投影转换为透视投影。
                 //裁剪空间的坐标经过缩放和偏移后就变成了(0,ｗ),而当分量除以分量W以后,就变成了(0,1),这样在计算需要返回(0,1)值的时候,就可以直接使用tex2Dproj了
-                return tex2Dproj(_GrabTexture, i.uvgrab) * 0.5;
+                half4 mainColor = tex2D(_MainTex, i.texcoord); //玻璃本身的颜色采样
+                half4 bump = tex2D(_BumpMap, i.texcoord);//从凹凸贴图采样玻璃的扰动值
+                half2 distortion = UnpackNormal(bump).rg; //将纹理颜色值转换为法线方向值
 
-
-                /*
-                    结合vert中的代码来看:
-                    (i.uvgrab.xy / i.uvgrab.w + 0.5)  (-1,1) * 0.5 => (-0.5, 0.5) + 0.5 = > (0,1)
-                    总结：
-                    为了体现玻璃半透明的效果，需要抓取整个场景到一张纹理，即GrabTexture
-                    然后对GrabTexture进行贴图，但是屏幕贴图怎么把玻璃区域刚好贴到玻璃四边形上呢？（uv和GrabTexture如何对应）
-                    顶点的xy坐标除以顶点的齐次坐标值w，得到其在透视投影环境下的位置
-                    把投影空间（半立方体空间）中的顶点转换到纹理坐标空间，也即：[-1, +1] => [0 , 1]
-                    由于D3D的纹理坐标v是朝下的，而顶点的y坐标是朝上的，所以要做一个转换（* -1） 
-
-
-
-                    为了体现玻璃半透明的效果，需要抓取整个场景到一张纹理，即GrabTexture
-                    通过顶点变换获得屏幕顶点坐标，再通过ComputeGrabScreenPos方法将（-1,1）的坐标转化为（0,1）的坐标 (-1,1) * 0.5 => (-0.5, 0.5) + 0.5 = > (0,1)
-                    此时就获得了GrabTexture上对应的纹理坐标
-                    在片元中，根据算好的纹理坐标，将GrabTexture贴在物体上，注意此时需要除以齐次坐标，保证结果是（0,1）
-                */
-
+                i.uvgrab.xy += distortion * _Magnitude; //对uvgrab进行扰动
+                fixed4 grabColor = tex2Dproj(_GrabTexture, i.uvgrab); //玻璃后面背景的颜色采样
+                return mainColor * grabColor;
             }
 
             ENDCG
