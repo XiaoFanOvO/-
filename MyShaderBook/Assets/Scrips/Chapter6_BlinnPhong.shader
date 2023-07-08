@@ -49,12 +49,13 @@ Shader "Unity Shader Book/Chapter6/BlinnPhing"
                 // o.worldNormal = mul(v.normal, (float3x3)unity_WorldToObject);
                 o.worldNormal = UnityObjectToWorldNormal(v.normal); //use Build-In
 
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                // o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.worldPos = UnityObjectToWorldDir(v.vertex);
 
                 return o;
             }
 
-             fixed4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 //Get ambient term
                 fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
