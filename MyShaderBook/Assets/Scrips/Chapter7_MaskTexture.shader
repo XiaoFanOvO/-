@@ -47,36 +47,50 @@ Shader "Unity Shader Book/Chapter7/MaskTexture"
             struct v2f
             {
                 float4 pos : SV_POSITION;
-                float3 worldNormal : TEXCOORD0;
-                float3 worldPos : TEXCOORD1;
-                float2 uv : TEXCOORD2;
+                float2 uv : TEXCOORD0;
+                float3 lightDir : TEXCOORD1;
+                float3 viewDir : TEXCOORD2;
             };
 
+
+            //对光照方向和视角方向进行了坐标空间的变换
+            //从模型空间变换到了切线空间
             v2f vert (a2v v)
             {
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.worldNormal = UnityObjectToWorldNormal(v.normal);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-                // o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw; // 先缩放再平移
-                o.uv = TRANSFORM_TEX(v.texcoord, _RampTex); // Built-in 拿顶点的uv去和材质球的收缩偏移作运算,确保缩放和偏移是正确值
+                // o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+                o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+
+                TANGENT_SPACE_ROTATION; //计算切线空间的宏
+
+                o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex)).xyz;
+                o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex)).xyz;
+
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed3 worldNormal = normalize(i.worldNormal);
-                fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
+                fixed3 tangentLightDir = normalize(i.lightDir);
+                fixed3 tangentViewDir = normalize(i.viewDir);
 
-                float3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;// 环境光
+                fixed3 tangentNormal = UnpackNormal(tex2D(_BumpMap, i.uv));
+                tangentNormal.xy *= _BumpScale;
+                tangentNormal.z = sqrt(1.0 - saturate(dot(tangentNormal.xy, tangentNormal.xy)));
 
-                //Use the texture to sample the diffuse color
-                fixed halfLambert = 0.5 * dot(worldNormal, worldLightDir) + 0.5;//最后的结果在[0,1]
-                fixed3 diffuseColor = tex2D(_RampTex, fixed2(halfLambert, halfLambert)).rgb * _Color.rgb;
-                fixed3 diffuse = _LightColor0.rbg * diffuseColor;
-                fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
-                fixed3 halfDir = normalize(worldLightDir + viewDir);
-                fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);//高光反射
+                fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+
+                fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
+
+                fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(tangentNormal, tangentLightDir));
+
+                fixed3 halfDir = normalize(tangentLightDir + tangentViewDir);
+
+                // Get the mask value 对遮罩纹理进行采样
+                fixed specularMask = tex2D(_SpecularMask, i.uv).r * _SpecularScale;
+                //Compute specular term with the specular mask
+                fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(tangentNormal, halfDir)), _Gloss) * specularMask;
                 return fixed4(ambient + diffuse + specular, 1.0);
             }
             ENDCG
