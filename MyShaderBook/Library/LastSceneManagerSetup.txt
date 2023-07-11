@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Chapter7_4.unity
+- path: Assets/Scenes/Chapter8_AlphaBlend.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
