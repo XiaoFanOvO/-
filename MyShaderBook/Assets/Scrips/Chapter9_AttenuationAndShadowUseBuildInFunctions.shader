@@ -85,11 +85,8 @@ Shader "Unity Shader Book/Chapter9/AttenuationAndShadowUseBuildInFunctions"
                 //Compute specular term
                 fixed3 specular = _LightColor0.rgb * _Specular.rbg * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
 
-                // The attenuation of direction light is always 1 衰减值
-                fixed atten = 1.0;
 
-                //UNITY_LIGHT_ATTENUATION not only compute attenuation, but also shadow infos
-                //
+                //统一计算光照衰减和阴影
                 UNITY_LIGHT_ATTENUATION(atten, i, i.worldPos);
 
                 return fixed4(ambient + (diffuse + specular) * atten, 1.0);
@@ -177,32 +174,10 @@ Shader "Unity Shader Book/Chapter9/AttenuationAndShadowUseBuildInFunctions"
                 //Compute specular term
                 fixed3 specular = _LightColor0.rgb * _Specular.rbg * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
 
-                // The attenuation of direction light is always 1 衰减值
-                // fixed atten = 1.0;
-
-                // #ifdef USING_DIRECTIONAL_LIGHT
-                //     fixed atten = 1.0;
-                // #else
-                //     float3 lightCoord = mul(unity_WorldToLight, fixed4(i.worldPos, 1)).xyz;
-                //     fixed atten = tex2D(_LightTexture0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
-                // #endif
-
-                #ifdef USING_DIRECTIONAL_LIGHT
-					fixed atten = 1.0;
-				#else
-					#if defined (POINT)
-				        float3 lightCoord = mul(unity_WorldToLight, float4(i.worldPos, 1)).xyz;
-				        fixed atten = tex2D(_LightTexture0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
-				    #elif defined (SPOT)
-				        float4 lightCoord = mul(unity_WorldToLight, float4(i.worldPos, 1));
-				        fixed atten = (lightCoord.z > 0) * tex2D(_LightTexture0, lightCoord.xy / lightCoord.w + 0.5).w * tex2D(_LightTextureB0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
-				    #else
-				        fixed atten = 1.0;
-				    #endif
-				#endif
-
-
-                return fixed4((diffuse + specular) * atten, 1.0);
+                // UNITY_LIGHT_ATTENUATION not only compute attenuation, but also shadow infos
+				UNITY_LIGHT_ATTENUATION(atten, i, i.worldPos);
+			 	
+				return fixed4((diffuse + specular) * atten, 1.0);
             }
             ENDCG
 

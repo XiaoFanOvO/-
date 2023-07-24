@@ -33,6 +33,14 @@ Shader "Unity Shader Book/Chapter9/Shader"
                 float3 normal : NORMAL;
             };
 
+
+            //SHADOW_COORDS：声明一个名为_ShadowCoord的阴影坐标变量；
+
+            //TRANSFER_SHADOW：根据不同平台，计算_ShadowCoord的值；
+
+            //SHADOW_ATTENUATION：使用_ShadowCoord对相关的纹理进行采样，得到阴影信息。
+
+
             struct v2f
             {
                 float4 pos : SV_POSITION;
