@@ -36,6 +36,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scrips\Chapter12\Bloom.cs" />
+     <Compile Include="Assets\Scrips\Chapter12\BrightnessSaturationAndContrast.cs" />
+     <Compile Include="Assets\Scrips\Chapter12\EdgeDetection.cs" />
+     <Compile Include="Assets\Scrips\Chapter12\GaussianBlur.cs" />
+     <Compile Include="Assets\Scrips\Chapter12\PostEffectsBase.cs" />
      <Compile Include="Assets\Scrips\Helpers\Rotating.cs" />
      <Compile Include="Assets\Scrips\Helpers\SetPropertyAttribute.cs" />
      <Compile Include="Assets\Scrips\Helpers\Translating.cs" />
@@ -43,7 +48,9 @@
      <None Include="Assets\Scrips\Chapter6_HalfLambertMat.shader" />
      <None Include="Assets\Scrips\Chapter10_GlassRefraction.shader" />
      <None Include="Assets\Scrips\Chapter7_RampTexture.shader" />
+     <None Include="Assets\Scrips\Chapter12_BrightnessSaturationAndContrast.shader" />
      <None Include="Assets\Scrips\Chapter7_SingleTexture.shader" />
+     <None Include="Assets\Scrips\Chapter12_EdgeDetection.shader" />
      <None Include="Assets\Scrips\Chapter6_DiffuseVertexLevel.shader" />
      <None Include="Assets\Scrips\Chapter11_Water.shader" />
      <None Include="Assets\Scrips\Chapter7_MaskTexture.shader" />
@@ -56,6 +63,7 @@
      <None Include="Assets\Scrips\Chapter8_AlphaBlendZWrite.shader" />
      <None Include="Assets\Scrips\Chapter7_NormalMapWorldSpaceMat.shader" />
      <None Include="Assets\Scrips\Chapter9_AlphaTestWithShadowMat.shader" />
+     <None Include="Assets\Scrips\Chapter12_GaussianBlur.shader" />
      <None Include="Assets\Scrips\Chapter6_SpecularPixelLevel.shader" />
      <None Include="Assets\Scrips\Chapter5_SimpleShader.shader" />
      <None Include="Assets\Scrips\Chapter8_AlphaTestBothSide.shader" />
@@ -71,6 +79,7 @@
      <None Include="Assets\Scrips\Common\BumpedSpecular.shader" />
      <None Include="Assets\Scrips\Chapter10_Fresnel.shader" />
      <None Include="Assets\Scrips\Chapter11_Billboard.shader" />
+     <None Include="Assets\Scrips\Chapter12_Bloom.shader" />
     <Reference Include="UnityEngine">
         <HintPath>E:/Unity4.7/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
