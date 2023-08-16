@@ -26,6 +26,7 @@
             o.Albedo = tex2D(_MainTex, IN.uv_MainTex);
         }
 
+        //表面着色器的输出等于光照模型的输入
         half4 LightingSimpleLambert(SurfaceOutput s, half3 lightDir, half atten)
         {
             half f = max(dot(s.Normal, lightDir), 0);

@@ -58,13 +58,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Part2\Extursion.cs" />
+    <Compile Include="Assets\Part5\BWEffect.cs" />
+    <Compile Include="Assets\Part5\CRTEffect.cs" />
+    <Compile Include="Assets\Part5\DistortionEffect.cs" />
     <None Include="Assets\Part2\SurfCircle.shader" />
     <None Include="Assets\Part2\SurfDiffuse.shader" />
     <None Include="Assets\readme.txt" />
     <None Include="Assets\Materials\NewShader\NewShader.shader" />
     <None Include="Assets\Materials\GrabShader.shader" />
+    <None Include="Assets\Part4\WaterShader.shader" />
     <None Include="Assets\Materials\Lambert\SimpleLambertX2.shader" />
+    <None Include="Assets\Part5\BWDiffuse.shader" />
     <None Include="Assets\Part1\MyVFShader.shader" />
+    <None Include="Assets\Part5\CRTDiffuse.shader" />
+    <None Include="Assets\Part4\GlassShader.shader" />
     <None Include="Assets\Materials\GlassShader.shader" />
     <None Include="Assets\Materials\Lambert\SimpleLambert.shader" />
     <None Include="Assets\Materials\Toon\Toon.shader" />
@@ -74,6 +81,7 @@
     <None Include="Assets\Part4\GrabShader.shader" />
     <None Include="Assets\Part1\MySurfShader.shader" />
     <None Include="Assets\Part2\SurfTextured.shader" />
+    <None Include="Assets\Part5\DistortionDiffuse.shader" />
     <None Include="Assets\Part3\SimpleLambert.shader" />
     <None Include="Assets\Materials\WaterShader.shader" />
     <Reference Include="Unity.TextMeshPro.Editor">
